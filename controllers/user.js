@@ -3,7 +3,17 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-
+exports.userById = (req, res, next, id) =>{
+    User.findById(id).exec((err, user) =>{
+        if (err || !user) {
+            return res.status(400).json({
+                error: "L'utilisateur n'a pas été trouvé"
+            });
+        }
+        req.profile = user;
+        next();
+    });
+};
 
 exports.signup = (req, res) =>{
     bcrypt.hash(req.body.password, 10)

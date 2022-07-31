@@ -8,7 +8,7 @@ exports.auth = (req, res, next) => {
         const userId = decodedToken.userId;
         req.auth = {userId};
         if (req.body.userId && req.body.userId !== userId) {
-            throw 'User ID non valable !';
+            throw new Error('User ID non valable !');
         }else{
             next();
         }
@@ -22,11 +22,10 @@ exports.verifyItem = (req, res, next) => {
     //console.log(user);
     let thing = req.thing.userId
     //console.log(thing);
-    if (user !== thing) {
+    if (user !== thing || req.profile.isAdmin === false) {
         return res.status(403).json({
             error: 'Accès refusé'
         })
     }
     next();
 }
-
